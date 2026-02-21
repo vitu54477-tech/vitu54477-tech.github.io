@@ -4,11 +4,12 @@
 <meta charset="UTF-8">
 <title>Admin - BergTips</title>
 <style>
-body { font-family: Arial; padding: 20px; background: #222; color: white; }
-input { width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: none; }
-button { width: 100%; padding: 12px; background: #0099ff; color: white; font-size: 16px; border: none; border-radius: 5px; margin-bottom: 10px; }
+body { font-family: Arial; padding: 20px; background: #121212; color: #fff; }
+h2 { color: #0099ff; }
+input { width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 5px; border:none; background:#1e1e1e; color:#fff; }
+button { width: 100%; padding: 12px; background: #0099ff; color: white; font-size: 16px; border: none; border-radius: 5px; margin-bottom: 10px; cursor:pointer; }
 #painel { display: none; }
-.jogo-card { background: #333; padding: 10px; border-radius: 5px; margin-bottom: 10px; }
+.jogo-card { background: #1e1e1e; padding: 10px; border-radius: 8px; margin-bottom: 10px; box-shadow:0 2px 5px rgba(0,0,0,0.4);}
 .jogo-card button { background: red; margin-top: 5px; width: 100%; }
 </style>
 
@@ -52,7 +53,7 @@ async function carregarJogos(){
                 <b>${jogo.campeonato}</b><br>
                 ${jogo.time1} vs ${jogo.time2}<br>
                 ⏰ ${jogo.horario}<br>
-                💡 Palpite: ${jogo.palpite}<br>
+                💡 Palpite: <span style="color:#00ff88;font-weight:bold;">${jogo.palpite}</span><br>
                 <button onclick="apagarJogo('${id}')">Apagar</button>
             </div>`;
         });

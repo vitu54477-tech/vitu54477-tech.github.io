@@ -6,29 +6,60 @@
 <style>
 body { font-family: Arial; padding: 20px; background: #222; color: white; }
 input { width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: none; }
-button { width: 100%; padding: 12px; background: #0099ff; color: white; font-size: 16px; border: none; border-radius: 5px; }
+button { width: 100%; padding: 12px; background: #0099ff; color: white; font-size: 16px; border: none; border-radius: 5px; margin-bottom: 10px; }
 #painel { display: none; }
+.jogo-card { background: #333; padding: 10px; border-radius: 5px; margin-bottom: 10px; }
+.jogo-card button { background: red; margin-top: 5px; width: 100%; }
 </style>
 
-<!-- Firebase SDK -->
 <script type="module">
-  // Importar módulos corretos
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyBVXOYYomSjZoUuhQ7DBQqjwAv35qZTfSA",
-    authDomain: "berg-b81b6.firebaseapp.com",
-    projectId: "berg-b81b6",
-    storageBucket: "berg-b81b6.firebasestorage.app",
-    messagingSenderId: "370724091586",
-    appId: "1:370724091586:web:ee05b1e3bc612d3cc72d5b"
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSyBVXOYYomSjZoUuhQ7DBQqjwAv35qZTfSA",
+  authDomain: "berg-b81b6.firebaseapp.com",
+  projectId: "berg-b81b6",
+  storageBucket: "berg-b81b6.firebasestorage.app",
+  messagingSenderId: "370724091586",
+  appId: "1:370724091586:web:ee05b1e3bc612d3cc72d5b"
+};
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-  window.salvarJogo = async function() {
+window.login = function(){
+    const s = document.getElementById("senha").value;
+    if(s==="0000") {
+        document.getElementById("painel").style.display="block";
+        carregarJogos();
+    } else {
+        alert("Senha incorreta");
+    }
+}
+
+async function carregarJogos(){
+    const lista = document.getElementById("lista-jogos");
+    lista.innerHTML = "";
+    const q = collection(db, "jogos");
+    onSnapshot(q, snapshot => {
+        lista.innerHTML = "";
+        snapshot.forEach(docSnap => {
+            const jogo = docSnap.data();
+            const id = docSnap.id;
+            lista.innerHTML += `
+            <div class="jogo-card">
+                <b>${jogo.campeonato}</b><br>
+                ${jogo.time1} vs ${jogo.time2}<br>
+                ⏰ ${jogo.horario}<br>
+                💡 Palpite: ${jogo.palpite}<br>
+                <button onclick="apagarJogo('${id}')">Apagar</button>
+            </div>`;
+        });
+    });
+}
+
+window.salvarJogo = async function(){
     const campeonato = document.getElementById("camp").value;
     const time1 = document.getElementById("t1").value;
     const time2 = document.getElementById("t2").value;
@@ -53,13 +84,14 @@ button { width: 100%; padding: 12px; background: #0099ff; color: white; font-siz
     } catch(e){
       alert("Erro ao salvar: " + e);
     }
-  }
+}
 
-  window.login = function(){
-    const s = document.getElementById("senha").value;
-    if(s==="0000") document.getElementById("painel").style.display="block";
-    else alert("Senha incorreta");
-  }
+window.apagarJogo = async function(id){
+    if(confirm("Deseja realmente apagar este jogo?")){
+        await deleteDoc(doc(db, "jogos", id));
+        alert("Jogo apagado!");
+    }
+}
 </script>
 </head>
 
@@ -76,6 +108,9 @@ button { width: 100%; padding: 12px; background: #0099ff; color: white; font-siz
     <input id="hora" placeholder="Horário">
     <input id="palpite" placeholder="Palpite">
     <button onclick="salvarJogo()">Salvar Jogo</button>
+    
+    <h3>Jogos cadastrados</h3>
+    <div id="lista-jogos"></div>
 </div>
 </body>
 </html>

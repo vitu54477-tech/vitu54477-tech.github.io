@@ -1,1 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Admin - BergTips</title>
+<style>
+body { font-family: Arial; padding: 20px; background: #222; color: white; }
+input { width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: none; }
+button { width: 100%; padding: 12px; background: #0099ff; color: white; font-size: 16px; border: none; border-radius: 5px; }
+#painel { display: none; }
+</style>
 
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBVXOYYomSjZoUuhQ7DBQqjwAv35qZTfSA",
+  authDomain: "berg-b81b6.firebaseapp.com",
+  projectId: "berg-b81b6",
+  storageBucket: "berg-b81b6.firebasestorage.app",
+  messagingSenderId: "370724091586",
+  appId: "1:370724091586:web:ee05b1e3bc612d3cc72d5b"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+</script>
+</head>
+
+<body>
+
+<h2>🔐 Login do Admin</h2>
+<input id="senha" type="password" placeholder="Digite a senha">
+<button onclick="login()">Entrar</button>
+
+<div id="painel">
+    <h2>Painel Admin</h2>
+    <input id="camp" placeholder="Campeonato">
+    <input id="t1" placeholder="Time 1">
+    <input id="t2" placeholder="Time 2">
+    <input id="hora" placeholder="Horário">
+    <input id="palpite" placeholder="Palpite">
+    <button onclick="salvar()">Salvar Jogo</button>
+</div>
+
+<script>
+function login() {
+    let s = document.getElementById("senha").value;
+    if (s === "0000") {
+        document.getElementById("painel").style.display = "block";
+    } else {
+        alert("Senha incorreta");
+    }
+}
+
+function salvar() {
+    db.collection("jogos").add({
+        campeonato: document.getElementById("camp").value,
+        time1: document.getElementById("t1").value,
+        time2: document.getElementById("t2").value,
+        horario: document.getElementById("hora").value,
+        palpite: document.getElementById("palpite").value,
+        timestamp: Date.now()
+    }).then(() => {
+        alert("Jogo adicionado!");
+        document.getElementById("camp").value="";
+        document.getElementById("t1").value="";
+        document.getElementById("t2").value="";
+        document.getElementById("hora").value="";
+        document.getElementById("palpite").value="";
+    }).catch(() => {
+        alert("Erro ao salvar");
+    });
+}
+</script>
+
+</body>
+</html>

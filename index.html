@@ -8,11 +8,10 @@ body { font-family: Arial; background: #f4f4f4; padding: 20px; }
 .card { background: white; padding: 15px; margin-bottom: 15px; border-radius: 8px; }
 </style>
 
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"></script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getFirestore, collection, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-<script>
 const firebaseConfig = {
   apiKey: "AIzaSyBVXOYYomSjZoUuhQ7DBQqjwAv35qZTfSA",
   authDomain: "berg-b81b6.firebaseapp.com",
@@ -21,34 +20,34 @@ const firebaseConfig = {
   messagingSenderId: "370724091586",
   appId: "1:370724091586:web:ee05b1e3bc612d3cc72d5b"
 };
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+async function carregarJogos(){
+  const lista = document.getElementById("lista");
+  lista.innerHTML = "";
+  const q = query(collection(db, "jogos"), orderBy("timestamp","desc"));
+  const snapshot = await getDocs(q);
+  snapshot.forEach(doc=>{
+    const jogo = doc.data();
+    lista.innerHTML += `
+      <div class="card">
+        <b>${jogo.campeonato}</b><br>
+        ${jogo.time1} vs ${jogo.time2}<br>
+        ⏰ ${jogo.horario}<br>
+        💡 Palpite: <b>${jogo.palpite}</b>
+      </div>
+    `;
+  });
+}
+
+window.onload = carregarJogos;
 </script>
 </head>
 
 <body>
 <h2>📋 Jogos do Dia</h2>
 <div id="lista"></div>
-
-<script>
-function carregarJogos() {
-    db.collection("jogos").orderBy("timestamp", "desc").get().then(snapshot => {
-        let area = document.getElementById("lista");
-        area.innerHTML = "";
-        snapshot.forEach(doc => {
-            let jogo = doc.data();
-            area.innerHTML += `
-            <div class="card">
-                <b>${jogo.campeonato}</b><br>
-                ${jogo.time1} vs ${jogo.time2}<br>
-                ⏰ ${jogo.horario}<br>
-                💡 Palpite: <b>${jogo.palpite}</b>
-            </div>`;
-        });
-    });
-}
-carregarJogos();
-</script>
-
 </body>
 </html>

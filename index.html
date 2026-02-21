@@ -26,8 +26,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const lista = document.getElementById("lista");
-
 function mostrarJogos() {
     const lista = document.getElementById("lista");
     const q = query(collection(db, "jogos"), orderBy("timestamp", "desc"));
@@ -54,7 +52,8 @@ window.onload = mostrarJogos;
 <div id="lista"></div>
 
 <footer>
-📱 Contato: <a href="https://wa.me/+5588992425815" target="_blank">+55 88 99242-5815</a>
+📱 Suporte WhatsApp: <a href="https://wa.me/+5588992424815" target="_blank">+55 88 99242-4815</a><br>
+📸 Instagram: <a href="https://www.instagram.com/bgx_7z?igsh=ZDJ3dDVkZzJuczBl" target="_blank">@bgx_7z</a>
 </footer>
 </body>
 </html>

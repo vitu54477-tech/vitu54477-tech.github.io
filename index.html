@@ -4,10 +4,13 @@
 <meta charset="UTF-8">
 <title>BergTips - Jogos do Dia</title>
 <style>
-body { font-family: Arial; background: #f4f4f4; padding: 20px; }
-.card { background: white; padding: 15px; margin-bottom: 15px; border-radius: 8px; }
-footer { margin-top: 20px; font-size: 14px; }
-a { color: #0099ff; text-decoration: none; }
+body { font-family: Arial; background: #121212; color: #fff; margin:0; padding:20px; }
+h2 { text-align:center; color:#0099ff; }
+.card { background: #1e1e1e; padding: 15px; margin-bottom: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
+.card b { color: #ffcc00; }
+.card .palpite { color:#00ff88; font-weight:bold; font-size: 16px; }
+footer { margin-top: 20px; font-size: 14px; text-align:center; color:#aaa; }
+footer a { color: #0099ff; text-decoration: none; margin: 0 10px; }
 </style>
 
 <script type="module">
@@ -38,7 +41,7 @@ function mostrarJogos() {
                 <b>${jogo.campeonato}</b><br>
                 ${jogo.time1} vs ${jogo.time2}<br>
                 ⏰ ${jogo.horario}<br>
-                💡 Palpite: <b>${jogo.palpite}</b>
+                💡 Palpite: <span class="palpite">${jogo.palpite}</span>
             </div>`;
         });
     });
@@ -48,7 +51,7 @@ window.onload = mostrarJogos;
 </script>
 </head>
 <body>
-<h2>📋 Jogos do Dia</h2>
+<h2>📋 Jogos do Dia - BergTips</h2>
 <div id="lista"></div>
 
 <footer>

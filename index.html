@@ -6,11 +6,13 @@
 <style>
 body { font-family: Arial; background: #f4f4f4; padding: 20px; }
 .card { background: white; padding: 15px; margin-bottom: 15px; border-radius: 8px; }
+footer { margin-top: 20px; font-size: 14px; }
+a { color: #0099ff; text-decoration: none; }
 </style>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, collection, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getFirestore, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBVXOYYomSjZoUuhQ7DBQqjwAv35qZTfSA",
@@ -24,30 +26,35 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-async function carregarJogos(){
-  const lista = document.getElementById("lista");
-  lista.innerHTML = "";
-  const q = query(collection(db, "jogos"), orderBy("timestamp","desc"));
-  const snapshot = await getDocs(q);
-  snapshot.forEach(doc=>{
-    const jogo = doc.data();
-    lista.innerHTML += `
-      <div class="card">
-        <b>${jogo.campeonato}</b><br>
-        ${jogo.time1} vs ${jogo.time2}<br>
-        ⏰ ${jogo.horario}<br>
-        💡 Palpite: <b>${jogo.palpite}</b>
-      </div>
-    `;
-  });
+const lista = document.getElementById("lista");
+
+function mostrarJogos() {
+    const lista = document.getElementById("lista");
+    const q = query(collection(db, "jogos"), orderBy("timestamp", "desc"));
+    onSnapshot(q, snapshot => {
+        lista.innerHTML = "";
+        snapshot.forEach(docSnap => {
+            const jogo = docSnap.data();
+            lista.innerHTML += `
+            <div class="card">
+                <b>${jogo.campeonato}</b><br>
+                ${jogo.time1} vs ${jogo.time2}<br>
+                ⏰ ${jogo.horario}<br>
+                💡 Palpite: <b>${jogo.palpite}</b>
+            </div>`;
+        });
+    });
 }
 
-window.onload = carregarJogos;
+window.onload = mostrarJogos;
 </script>
 </head>
-
 <body>
 <h2>📋 Jogos do Dia</h2>
 <div id="lista"></div>
+
+<footer>
+📱 Contato: <a href="https://wa.me/+5588992425815" target="_blank">+55 88 99242-5815</a>
+</footer>
 </body>
 </html>
